@@ -1,0 +1,124 @@
+/* Sizzle & Serve — a warm warung kitchen: cream tiles, terracotta, wood. */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #2b1d16; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #3a2418; }
+#app { max-width: 1280px; margin: 0 auto; padding: 10px 14px 14px; background: #f7ead7; min-height: 100vh; }
+button { font-family: inherit; cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: 0.45; }
+.hidden { display: none !important; }
+
+/* ---- HUD ---- */
+#hud { display: flex; align-items: center; gap: 10px; background: #fff6e8; border: 2px solid #d9a066; border-radius: 14px; padding: 8px 12px; }
+.brand { font-size: 24px; font-weight: 800; white-space: nowrap; }
+.brand small { font-size: 12px; font-weight: 600; color: #a06a3b; }
+.hud-stat { font-size: 17px; font-weight: 700; background: #fdeecf; border: 1px solid #e8c48f; border-radius: 10px; padding: 6px 10px; white-space: nowrap; }
+.hud-timer { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 160px; }
+#hud-clock { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.bar { flex: 1; height: 12px; background: #ecd9bd; border-radius: 6px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: #2a9d8f; transition: width 0.2s linear; }
+.bar i.urgent { background: #e4572e; }
+#hud button { font-size: 16px; font-weight: 700; background: #c96f4a; color: #fff; border: none; border-radius: 10px; padding: 8px 12px; }
+#hud button:hover { background: #b25a38; }
+
+/* ---- Order board ---- */
+#orders { display: flex; gap: 12px; margin: 12px 0; min-height: 96px; }
+.no-orders { color: #a06a3b; font-style: italic; align-self: center; }
+.ticket { flex: 1; max-width: 400px; background: #fffdf6; border: 2px solid #d9a066; border-left: 8px solid #2a9d8f; border-radius: 12px; padding: 8px 12px; }
+.ticket.urgent { border-left-color: #e4572e; animation: wobble 0.6s ease-in-out infinite alternate; }
+@keyframes wobble { from { transform: translateY(0); } to { transform: translateY(-2px); } }
+.ticket-dish { display: flex; align-items: center; gap: 8px; }
+.ticket-dish.served { opacity: 0.55; }
+.ticket-name { font-size: 19px; font-weight: 800; }
+.ticket-needs { margin-left: auto; }
+.chip { display: inline-block; font-size: 20px; background: #fdeecf; border-radius: 8px; padding: 2px 6px; margin-left: 4px; }
+.chip.done { background: #cdeeda; }
+.ticket-served { color: #2a7a5b; font-weight: 700; }
+.patience { height: 10px; background: #ecd9bd; border-radius: 5px; overflow: hidden; margin-top: 6px; }
+.patience i { display: block; height: 100%; background: #2a9d8f; transition: width 0.2s linear; }
+.ticket.urgent .patience i { background: #e4572e; }
+.ticket-pay { font-size: 13px; color: #a06a3b; margin-top: 4px; }
+
+/* ---- Kitchen stations ---- */
+#kitchen { display: grid; grid-template-columns: 1.25fr 1fr 1.15fr 1fr 1fr; gap: 12px; }
+.station { background: #fff6e8; border: 2px solid #d9a066; border-radius: 14px; padding: 10px; }
+.station h2 { font-size: 17px; margin: 0 0 8px; }
+.hint { font-size: 12px; color: #a06a3b; margin: 8px 0 0; line-height: 1.4; }
+#pantry-items { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ing { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; background: #fffdf6; border: 2px solid #e8c48f; border-radius: 12px; padding: 8px 4px 6px; }
+.ing:hover:not(:disabled) { border-color: #c96f4a; transform: translateY(-1px); }
+.ing-emoji { font-size: 30px; }
+.ing-name { font-size: 14px; font-weight: 700; }
+.ing-prep { font-size: 11px; color: #a06a3b; }
+.ing-key { position: absolute; top: 4px; right: 6px; font-size: 11px; color: #c9a06a; font-weight: 700; }
+.board-btn { width: 100%; background: #fffdf6; border: 2px solid #e8c48f; border-radius: 12px; padding: 8px; text-align: center; }
+.board-btn:hover { border-color: #c96f4a; }
+.board-empty { color: #a06a3b; font-size: 14px; line-height: 1.5; min-height: 96px; display: flex; align-items: center; justify-content: center; }
+.board-active { text-align: center; min-height: 96px; }
+.board-emoji { font-size: 44px; }
+.board-progress { height: 12px; background: #ecd9bd; border-radius: 6px; overflow: hidden; margin: 8px 0; }
+.board-progress i { display: block; height: 100%; background: #e9a13b; }
+.board-text { font-size: 14px; font-weight: 700; }
+#burners { display: flex; flex-direction: column; gap: 8px; }
+.burner { display: flex; align-items: center; gap: 8px; background: #fffdf6; border: 2px solid #e8c48f; border-radius: 12px; padding: 8px; text-align: left; }
+.burner.empty { color: #a06a3b; }
+.burner.cooking { border-color: #e9a13b; }
+.burner.ready { border-color: #2a9d8f; background: #e6f6ef; animation: glow 0.7s ease-in-out infinite alternate; }
+@keyframes glow { from { box-shadow: 0 0 0 rgba(42,157,143,0.2); } to { box-shadow: 0 0 14px rgba(42,157,143,0.55); } }
+.burner.burnt { border-color: #5b3a29; background: #3a2418; color: #f7ead7; }
+.burner-emoji { font-size: 32px; }
+.burner-progress { flex: 1; height: 10px; background: #ecd9bd; border-radius: 5px; overflow: hidden; }
+.burner-progress i { display: block; height: 100%; background: #e4572e; }
+.burner-label { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.plate-btn { width: 100%; background: #fffdf6; border: 2px dashed #d9a066; border-radius: 12px; padding: 10px; }
+.plate-slot { display: inline-block; width: 52px; height: 52px; line-height: 52px; font-size: 30px; border: 2px dashed #e8c48f; border-radius: 50%; margin: 2px; vertical-align: middle; }
+.plate-slot.filled { border-style: solid; border-color: #2a9d8f; background: #e6f6ef; }
+.plate-done { margin-top: 8px; font-size: 15px; font-weight: 800; color: #2a7a5b; animation: glow 0.7s ease-in-out infinite alternate; }
+.plate-hint { margin-top: 8px; font-size: 13px; color: #a06a3b; }
+.serve-btn { width: 100%; min-height: 118px; background: #fffdf6; border: 2px solid #e8c48f; border-radius: 12px; padding: 10px; }
+.serve-btn.ready { border-color: #2a9d8f; background: #e6f6ef; animation: glow 0.7s ease-in-out infinite alternate; }
+.serve-emoji { font-size: 40px; display: block; }
+.serve-label { font-size: 15px; font-weight: 800; display: block; margin-top: 4px; }
+.serve-flash { display: block; margin-top: 6px; font-size: 17px; font-weight: 800; color: #2a7a5b; }
+
+/* ---- Tray ---- */
+#tray { display: flex; align-items: center; gap: 16px; margin-top: 12px; background: #fff6e8; border: 2px solid #d9a066; border-radius: 14px; padding: 8px 12px; }
+#hand { font-size: 17px; }
+#message { flex: 1; font-size: 15px; font-weight: 600; color: #7a4a21; min-height: 22px; }
+#btn-trash { font-size: 16px; font-weight: 700; background: #8b5a2b; color: #fff; border: none; border-radius: 10px; padding: 8px 14px; }
+#btn-trash small { font-weight: 400; opacity: 0.8; }
+#popups { position: fixed; pointer-events: none; }
+.popup { position: fixed; right: 120px; bottom: 260px; font-size: 26px; font-weight: 800; color: #2a7a5b; animation: floatup 1.4s ease-out forwards; text-shadow: 0 2px 0 #fff; }
+@keyframes floatup { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-60px); } }
+#status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---- Overlays ---- */
+.overlay { position: fixed; inset: 0; background: rgba(43, 29, 22, 0.72); display: flex; align-items: center; justify-content: center; z-index: 10; padding: 20px; }
+.card { background: #fff6e8; border: 3px solid #d9a066; border-radius: 18px; padding: 24px 28px; max-width: 640px; width: 100%; text-align: center; max-height: 92vh; overflow-y: auto; }
+.card.wide { max-width: 720px; }
+.card h1 { margin: 0 0 8px; font-size: 34px; }
+.menu-emoji { font-size: 52px; }
+.tagline { font-size: 16px; color: #7a4a21; }
+.recipes { display: flex; gap: 12px; margin: 16px 0; text-align: left; }
+.recipe-card { flex: 1; background: #fffdf6; border: 2px solid #e8c48f; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.rc-emoji { font-size: 30px; }
+.recipe-card b { font-size: 17px; }
+.recipe-card span { font-size: 13px; line-height: 1.45; }
+.rc-pay { color: #2a7a5b; font-weight: 700; }
+.best-line { font-size: 14px; color: #a06a3b; }
+.big-btn { display: block; width: 100%; font-size: 19px; font-weight: 800; background: #c96f4a; color: #fff; border: none; border-radius: 12px; padding: 13px; margin-top: 12px; }
+.big-btn:hover { background: #b25a38; }
+.ghost-btn { display: block; width: 100%; font-size: 16px; font-weight: 700; background: transparent; color: #7a4a21; border: 2px solid #d9a066; border-radius: 12px; padding: 10px; margin-top: 10px; }
+.howto { text-align: left; font-size: 15px; line-height: 1.6; }
+.howto li { margin-bottom: 8px; }
+.shop-coins-line { font-size: 18px; }
+#shop-items { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; text-align: left; }
+.shop-item { display: flex; align-items: center; gap: 12px; background: #fffdf6; border: 2px solid #e8c48f; border-radius: 12px; padding: 10px 12px; }
+.shop-emoji { font-size: 34px; }
+.shop-info { flex: 1; }
+.shop-info b { font-size: 16px; }
+.shop-level { color: #e9a13b; }
+.shop-info p { margin: 2px 0 0; font-size: 13px; color: #7a4a21; }
+.shop-buy { font-size: 16px; font-weight: 800; background: #2a9d8f; color: #fff; border: none; border-radius: 10px; padding: 10px 14px; white-space: nowrap; }
+.shop-buy:hover:not(:disabled) { background: #21867a; }
+.shop-actions { display: flex; flex-direction: column; }
+.dayend-line { font-size: 20px; font-weight: 800; }
