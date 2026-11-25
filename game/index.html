@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sizzle &amp; Serve — a warung kitchen rush</title>
+<link rel="stylesheet" href="./css/kitchen.css">
+</head>
+<body>
+<div id="app">
+  <header id="hud">
+    <div class="brand">🍳 <span>Sizzle &amp; Serve</span> <small>warung kitchen rush</small></div>
+    <div class="hud-stat" id="hud-day">Day 1</div>
+    <div class="hud-timer"><span id="hud-clock">01:30</span><div class="bar"><i id="hud-timerbar"></i></div></div>
+    <div class="hud-stat" id="hud-coins">🪙 0</div>
+    <div class="hud-stat" id="hud-hearts">❤️❤️❤️</div>
+    <div class="hud-stat" id="hud-score">Score 0</div>
+    <button id="btn-shop" data-action="shop">🛒 Shop</button>
+    <button id="btn-help" data-action="help">❓ How to play</button>
+    <button id="btn-sound" data-action="sound">🔊</button>
+    <button id="btn-pause" data-action="pause">⏸</button>
+  </header>
+
+  <section id="orders" aria-label="Order board"></section>
+
+  <main id="kitchen">
+    <section class="station" id="pantry">
+      <h2>🥬 Pantry — ingredients</h2>
+      <div id="pantry-items"></div>
+      <p class="hint">Click an ingredient to pick it up. Keys 1–7.</p>
+    </section>
+    <section class="station" id="board-station">
+      <h2>🔪 Chopping board</h2>
+      <div id="board"></div>
+      <p class="hint">Pick up chili, chicken or greens, then click the board to chop. Key C.</p>
+    </section>
+    <section class="station" id="stove-station">
+      <h2>🔥 Stove</h2>
+      <div id="burners"></div>
+      <p class="hint">Click a burner to cook, or to take food that is ready. Key B.</p>
+    </section>
+    <section class="station" id="plate-station">
+      <h2>🍽️ Plating counter</h2>
+      <div id="plate"></div>
+      <p class="hint">Click the plate to add what you hold. Key P.</p>
+    </section>
+    <section class="station" id="serve-station">
+      <h2>🛎️ Serve window</h2>
+      <div id="serve"></div>
+      <p class="hint">Click to serve a finished dish. Key S.</p>
+    </section>
+  </main>
+
+  <footer id="tray">
+    <div id="hand">🤲 Hand: <b>empty</b></div>
+    <div id="message" role="status"></div>
+    <button id="btn-trash" data-action="trash">🗑️ Trash <small>(T)</small></button>
+  </footer>
+
+  <div id="popups"></div>
+
+  <div class="overlay" id="overlay-menu">
+    <div class="card">
+      <div class="menu-emoji">🍳🔥</div>
+      <h1>Sizzle &amp; Serve</h1>
+      <p class="tagline">A warung kitchen rush. Orders fly in, the stove is hot, and the lunch crowd waits for no one.</p>
+      <div class="recipes">
+        <div class="recipe-card"><span class="rc-emoji">🍳</span><b>Nasi Goreng</b><span>🍚 fried rice + 🥚 fried egg + 🌶️ chopped chili</span><span class="rc-pay">pays 25 🪙 + tip</span></div>
+        <div class="recipe-card"><span class="rc-emoji">🍜</span><b>Mie Ayam</b><span>🍜 boiled noodles + 🍗 chopped chicken + 🥬 chopped greens + 🍲 broth</span><span class="rc-pay">pays 30 🪙 + tip</span></div>
+      </div>
+      <p class="best-line">Best score: <b id="menu-best">0</b> · Cook a day in 90 seconds — miss 3 orders and the run ends.</p>
+      <button class="big-btn" data-action="start">▶ Start cooking — Day 1</button>
+      <button class="ghost-btn" data-action="help">How to play</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-help">
+    <div class="card">
+      <h1>How to play</h1>
+      <ol class="howto">
+        <li><b>Read the order board</b> — each ticket shows a dish and the ingredients it needs. The bar is the customer's patience.</li>
+        <li><b>Pick up ingredients</b> from the pantry (click, or keys 1–7). You carry one thing at a time.</li>
+        <li><b>Chop</b> chili, chicken and greens on the board (click it, or C). <b>Cook</b> rice, egg and noodles on the stove (click a burner, or B) — take food off before it burns!</li>
+        <li><b>Plate it</b> (click the plate, or P). When the plate matches a recipe, it lights up as a finished dish.</li>
+        <li><b>Serve</b> at the window (click it, or S) before the customer's patience runs out. Faster serves earn bigger tips.</li>
+        <li><b>Shop</b> between days: sharper knives, more burners, patient customers, golden spatula.</li>
+        <li>Miss 3 orders and the run ends. Days get faster and hungrier.</li>
+      </ol>
+      <button class="big-btn" data-action="close-help">Got it — back to the kitchen</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-shop">
+    <div class="card wide">
+      <h1>🛒 Kitchen shop</h1>
+      <p class="shop-coins-line">Your purse: <b id="shop-coins">🪙 0</b></p>
+      <div id="shop-items"></div>
+      <div class="shop-actions">
+        <button class="big-btn" id="shop-next" data-action="shop-to-day">Start the next day ▶</button>
+        <button class="ghost-btn" id="shop-back" data-action="close-shop">Back to the kitchen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-dayend">
+    <div class="card">
+      <h1>🌇 Day done!</h1>
+      <div id="dayend-body"></div>
+      <div class="shop-actions">
+        <button class="big-btn" data-action="next-day">🛒 Shop upgrades</button>
+        <button class="ghost-btn" data-action="shop-to-day">Skip the shop — next day ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-gameover">
+    <div class="card">
+      <h1>💔 Kitchen closed</h1>
+      <div id="gameover-body"></div>
+      <div class="shop-actions">
+        <button class="big-btn" data-action="start">🔄 Cook again</button>
+        <button class="ghost-btn" data-action="restart">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="overlay-pause">
+    <div class="card">
+      <h1>⏸ Paused</h1>
+      <p>The stove is holding. Take a breath.</p>
+      <div class="shop-actions">
+        <button class="big-btn" data-action="resume">▶ Keep cooking</button>
+        <button class="ghost-btn" data-action="restart">Quit to menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+<p id="status" role="status" aria-live="polite"></p>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
